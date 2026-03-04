@@ -247,6 +247,46 @@
             gap: 7px;
         }
 
+        /* ── 项目演示动图 ── */
+        .project-demo {
+            margin-top: 14px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #0d1117;
+        }
+
+        .project-demo-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: #161b22;
+            font-size: 0.78rem;
+            color: #8b949e;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .project-demo-label span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .demo-dot-red    { background: #ff5f57; }
+        .demo-dot-yellow { background: #febc2e; }
+        .demo-dot-green  { background: #28c840; }
+
+        .project-demo img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 420px;
+            object-fit: contain;
+            background: #0d1117;
+        }
+
         .project-tag {
             font-size: 0.78rem;
             background: #f1f3f4;
@@ -392,6 +432,17 @@
                     <span class="project-tag">IPC</span>
                     <span class="project-tag">插件系统</span>
                     <span class="project-tag">多进程</span>
+                </div>
+                <div class="project-demo">
+                    <div class="project-demo-label">
+                        <span class="demo-dot-red"></span>
+                        <span class="demo-dot-yellow"></span>
+                        <span class="demo-dot-green"></span>
+                        &nbsp;功能演示 · 插件下载
+                    </div>
+                    <img src="GIF/plugins_download.gif"
+                         alt="Master 插件下载功能演示"
+                         loading="lazy" />
                 </div>
             </div>
 

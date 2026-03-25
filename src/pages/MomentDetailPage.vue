@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useHead } from '@vueuse/head'
 import { useRoute } from 'vue-router'
+import GiscusComments from '../components/GiscusComments.vue'
 import { find_moment_by_slug } from '../lib/content'
 
 const route = useRoute()
@@ -18,6 +19,9 @@ useHead(() => ({
     <h1>{{ moment.title }}</h1>
     <p class="article_summary">{{ moment.summary }}</p>
     <article class="markdown_body" v-html="moment.html" />
+    <div class="moment_comments">
+      <GiscusComments />
+    </div>
   </section>
   <section v-else class="panel">
     <h1>内容不存在</h1>

@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useHead } from '@vueuse/head'
 import { useRoute } from 'vue-router'
+import GiscusComments from '../components/GiscusComments.vue'
 import { find_note_by_slug } from '../lib/content'
 
 interface TocItem {
@@ -144,6 +145,9 @@ onBeforeUnmount(() => {
         <h1>{{ note.title }}</h1>
         <p class="article_summary">{{ note.summary }}</p>
         <article class="markdown_body animate_heading" v-html="processed_html" />
+        <div class="note_comments">
+          <GiscusComments />
+        </div>
       </div>
     </div>
   </section>

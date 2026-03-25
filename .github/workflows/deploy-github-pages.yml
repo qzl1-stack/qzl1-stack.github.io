@@ -43,6 +43,11 @@ jobs:
       - name: Build
         env:
           VITE_BASE_PATH: ${{ steps.base.outputs.path }}
+          # 可选：在仓库 Variables 中配置，使线上构建包含评论区
+          VITE_GISCUS_REPO: ${{ vars.VITE_GISCUS_REPO }}
+          VITE_GISCUS_REPO_ID: ${{ vars.VITE_GISCUS_REPO_ID }}
+          VITE_GISCUS_CATEGORY: ${{ vars.VITE_GISCUS_CATEGORY }}
+          VITE_GISCUS_CATEGORY_ID: ${{ vars.VITE_GISCUS_CATEGORY_ID }}
         run: npm run build
 
       - name: SPA fallback for GitHub Pages

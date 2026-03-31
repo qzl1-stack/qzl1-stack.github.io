@@ -24,6 +24,13 @@ const story_steps = [
 ]
 const story_progress = ref(0)
 const active_story_index = ref(0)
+
+const story_dot_radius = 12
+const story_dot_stroke_width = 2
+const story_dot_circumference = 2 * Math.PI * story_dot_radius
+
+const progress_left = ref(0)
+
 const github_link = resume_data.github
 const github_avatar = `${github_link.replace('https://github.com/', 'https://github.com/')}.png?size=160`
 
@@ -37,8 +44,14 @@ useHead({
   ],
 })
 
+let observer: IntersectionObserver | null = null
+let story_section: HTMLElement | null = null
+let home_frame: HTMLElement | null = null
+let scroll_handler: (() => void) | null = null
+let resize_handler: (() => void) | null = null
+
 onMounted(() => {
-  const observer = new IntersectionObserver(
+  observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -48,30 +61,56 @@ onMounted(() => {
     },
     { threshold: 0.25 },
   )
-  document.querySelectorAll('.reveal_item').forEach((element) => observer.observe(element))
+  document.querySelectorAll('.reveal_item').forEach((element) => observer?.observe(element))
 
-  const story_section = document.querySelector<HTMLElement>('.story_timeline')
-  const scroll_handler = (): void => {
-    if (!story_section) return
-    const rect = story_section.getBoundingClientRect()
+  story_section = document.querySelector<HTMLElement>('.story_timeline')
+  home_frame = document.querySelector<HTMLElement>('.home_content_frame')
+
+  const update_progress_left = (): void => {
+    if (!home_frame) return
+    const rect = home_frame.getBoundingClientRect()
+    progress_left.value = rect.left
+  }
+  resize_handler = () => update_progress_left()
+  update_progress_left()
+
+  scroll_handler = (): void => {
+    if (!home_frame) return
+    const rect = home_frame.getBoundingClientRect()
     const start = window.innerHeight * 0.2
     const end = window.innerHeight * 0.8
     const raw_progress = (start - rect.top) / (rect.height + end)
     const normalized = Math.min(Math.max(raw_progress, 0), 1)
     story_progress.value = normalized
-    const next_index = Math.min(
-      story_steps.length - 1,
-      Math.floor(normalized * story_steps.length),
-    )
-    active_story_index.value = next_index
-  }
-  window.addEventListener('scroll', scroll_handler, { passive: true })
-  scroll_handler()
+    if (!story_section) return
 
-  onUnmounted(() => {
+    const story_rect = story_section.getBoundingClientRect()
+    const raw_story_progress = (start - story_rect.top) / (story_rect.height + end)
+    const normalized_story_progress = Math.min(Math.max(raw_story_progress, 0), 1)
+    active_story_index.value = Math.min(
+      story_steps.length - 1,
+      Math.floor(normalized_story_progress * story_steps.length),
+    )
+  }
+
+  if (scroll_handler) {
+    window.addEventListener('scroll', scroll_handler, { passive: true })
+    scroll_handler()
+  }
+
+  if (resize_handler) {
+    window.addEventListener('resize', resize_handler)
+  }
+})
+
+onUnmounted(() => {
+  if (scroll_handler) {
     window.removeEventListener('scroll', scroll_handler)
-    observer.disconnect()
-  })
+  }
+  if (resize_handler) {
+    window.removeEventListener('resize', resize_handler)
+  }
+  observer?.disconnect()
 })
 </script>
 
@@ -89,45 +128,85 @@ onMounted(() => {
     </div>
   </section>
 
-  <section class="panel reveal_item story_timeline">
-    <h2>滚动叙事</h2>
-    <div class="timeline_track">
-      <div class="timeline_fill" :style="{ width: `${story_progress * 100}%` }"></div>
-    </div>
-    <div class="story_grid">
-      <article
-        class="story_card"
-        :class="{ is_active: active_story_index === index }"
-        v-for="(step, index) in story_steps"
-        :key="step.title"
-      >
-        <p class="story_tag">{{ step.title }}</p>
-        <h3>{{ step.text }}</h3>
-      </article>
-    </div>
-  </section>
+  <main class="home_content_frame">
+    <aside class="home_story_progress" aria-hidden="true" :style="{ left: `${progress_left}px` }">
+      <div class="story_progress_dot">
+        <svg
+          class="story_progress_svg"
+          width="100%"
+          height="100%"
+          viewBox="0 0 30 30"
+          role="presentation"
+        >
+          <defs>
+            <linearGradient id="story_progress_gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--brand)" />
+              <stop offset="100%" stop-color="var(--brand_2)" />
+            </linearGradient>
+          </defs>
+          <circle
+            class="story_progress_bg"
+            cx="15"
+            cy="15"
+            :r="story_dot_radius"
+            :stroke-width="story_dot_stroke_width"
+          />
+          <circle
+            class="story_progress_fg"
+            cx="15"
+            cy="15"
+            :r="story_dot_radius"
+            :stroke-width="story_dot_stroke_width"
+            :stroke-dasharray="story_dot_circumference"
+            :stroke-dashoffset="story_dot_circumference * (1 - story_progress)"
+            transform="rotate(-90 15 15)"
+          />
+        </svg>
+      </div>
+    </aside>
 
-  <section class="panel reveal_item">
-    <h2>最新手记</h2>
-    <div class="grid">
-      <PostCard
-        v-for="post in latest_notes"
-        :key="post.slug"
-        :post="post"
-        link_base="/notes"
-      />
-    </div>
-  </section>
+    <div class="home_panels">
+      <section class="panel reveal_item story_timeline home_panel" aria-label="滚动叙事">
+        <div class="story_grid">
+          <article
+            class="story_card"
+            :class="{ is_active: active_story_index === index }"
+            v-for="(step, index) in story_steps"
+            :key="step.title"
+          >
+            <p class="story_tag">{{ step.title }}</p>
+            <h3>{{ step.text }}</h3>
+          </article>
+        </div>
+      </section>
 
-  <section class="panel reveal_item">
-    <h2>最新动态</h2>
-    <div class="grid">
-      <PostCard
-        v-for="post in latest_moments"
-        :key="post.slug"
-        :post="post"
-        link_base="/moments"
-      />
+      <section class="panel reveal_item home_panel">
+        <div class="home_panel_head">
+          <h2>最新手记</h2>
+        </div>
+        <div class="grid home_grid">
+          <PostCard
+            v-for="post in latest_notes"
+            :key="post.slug"
+            :post="post"
+            link_base="/notes"
+          />
+        </div>
+      </section>
+
+      <section class="panel reveal_item home_panel">
+        <div class="home_panel_head">
+          <h2>最新动态</h2>
+        </div>
+        <div class="grid home_grid">
+          <PostCard
+            v-for="post in latest_moments"
+            :key="post.slug"
+            :post="post"
+            link_base="/moments"
+          />
+        </div>
+      </section>
     </div>
-  </section>
+  </main>
 </template>

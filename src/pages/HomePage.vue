@@ -15,13 +15,7 @@ const story_steps = [
   { num: '03', title: 'Publish', text: '持续发布动态与文章，形成可持续增长的个人站点。' },
 ]
 
-const story_progress = ref(0)
 const active_story_index = ref(0)
-const progress_left = ref(0)
-
-const story_dot_radius = 12
-const story_dot_stroke_width = 2
-const story_dot_circumference = 2 * Math.PI * story_dot_radius
 
 const github_link = resume_data.github
 const github_avatar = `${github_link}.png?size=160`
@@ -33,9 +27,7 @@ useHead({
 
 let observer: IntersectionObserver | null = null
 let story_section: HTMLElement | null = null
-let home_frame: HTMLElement | null = null
 let scroll_handler: (() => void) | null = null
-let resize_handler: (() => void) | null = null
 
 onMounted(() => {
   observer = new IntersectionObserver(
@@ -45,36 +37,22 @@ onMounted(() => {
   document.querySelectorAll('.reveal_item').forEach((el) => observer?.observe(el))
 
   story_section = document.querySelector<HTMLElement>('.story_section')
-  home_frame = document.querySelector<HTMLElement>('.home_page')
-
-  const update_left = () => {
-    if (!home_frame) return
-    progress_left.value = home_frame.getBoundingClientRect().left
-  }
-  resize_handler = update_left
-  update_left()
 
   scroll_handler = () => {
-    if (!home_frame) return
-    const rect = home_frame.getBoundingClientRect()
+    if (!story_section) return
     const start = window.innerHeight * 0.2
     const end = window.innerHeight * 0.8
-    story_progress.value = Math.min(Math.max((start - rect.top) / (rect.height + end), 0), 1)
-
-    if (!story_section) return
     const sr = story_section.getBoundingClientRect()
     const sp = Math.min(Math.max((start - sr.top) / (sr.height + end), 0), 1)
     active_story_index.value = Math.min(story_steps.length - 1, Math.floor(sp * story_steps.length))
   }
 
   window.addEventListener('scroll', scroll_handler, { passive: true })
-  window.addEventListener('resize', resize_handler)
   scroll_handler()
 })
 
 onUnmounted(() => {
   if (scroll_handler) window.removeEventListener('scroll', scroll_handler)
-  if (resize_handler) window.removeEventListener('resize', resize_handler)
   observer?.disconnect()
 })
 </script>

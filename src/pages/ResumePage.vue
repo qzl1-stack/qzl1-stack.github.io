@@ -56,11 +56,7 @@ const projects: ProjectItem[] = [
       '基于 Qt6 的工业设备管理工具，支持批量 IP 添加（拖拽文件导入）、实时在线状态检测，及通过 SSH / SFTP 向多设备并发上传文件、下载日志。提供中英文双语界面，无需重启即时切换。',
     tags: ['C++ 17', 'Qt6', 'QML', 'SSH/SFTP', 'IPv4 管理', '国际化'],
     demos: [
-      {
-        label: '设备管理与文件传输 · Device & File Transfer',
-        src: '/GIF/plugins_VTA.gif?v=1',
-        alt: 'VTA 演示',
-      },
+      { label: '设备管理与文件传输 · Device & File Transfer', src: '/GIF/plugins_VTA.gif?v=1', alt: 'VTA 演示' },
     ],
   },
   {
@@ -82,8 +78,8 @@ const projects: ProjectItem[] = [
       '基于 Qt6 + GStreamer + OpenGL 的高性能视频流显示系统。支持 UDP H.264 实时解码与 OpenGL 硬件加速渲染，集成 DM 二维码智能识别（OpenCV + ZXing-C++）与摄像头参数 TCP 远程控制。采用多线程异步处理，含异常自动恢复与实时性能监控模块。',
     tags: ['C++ 17', 'Qt6', 'QML', 'GStreamer', 'OpenGL', 'OpenCV', '二维码识别', '多线程'],
     demos: [
-      { label: '视频播放与二维码识别 (1) · Video & QR Detection', src: '/GIF/detect1.gif?v=1', alt: '视频识别演示 1' },
-      { label: '视频播放与二维码识别 (2) · Video & QR Detection', src: '/GIF/detect2.gif?v=1', alt: '视频识别演示 2' },
+      { label: '视频播放与二维码识别 (1)', src: '/GIF/detect1.gif?v=1', alt: '视频识别演示 1' },
+      { label: '视频播放与二维码识别 (2)', src: '/GIF/detect2.gif?v=1', alt: '视频识别演示 2' },
     ],
   },
   {
@@ -100,71 +96,96 @@ const projects: ProjectItem[] = [
 
 const open_project_keys = ref<Record<string, boolean>>({})
 
-function ToggleProjectDemo(project_key: string): void {
-  open_project_keys.value[project_key] = !open_project_keys.value[project_key]
+function ToggleProjectDemo(key: string): void {
+  open_project_keys.value[key] = !open_project_keys.value[key]
 }
 
-useHead({
-  title: '简历 | QZL Blog',
-})
+useHead({ title: '简历 | QZL Blog' })
 </script>
 
 <template>
   <div class="resume_page">
-    <section class="resume_hero">
-      <div class="hero_overlay"></div>
-      <div class="hero_content">
-        <p class="hero_badge">C++ · Qt GUI Engineer</p>
-        <h1>全<span>志凌</span></h1>
+
+    <!-- ── Hero banner ── -->
+    <div class="resume_hero">
+      <div class="hero_glow" aria-hidden="true"></div>
+      <div class="hero_body">
+        <span class="hero_badge">C++ · Qt GUI Engineer</span>
+        <h1 class="hero_name">全<em>志凌</em></h1>
         <p class="hero_sub">湖南农业大学 · 专注 Qt6 / QML / C++17 桌面应用开发</p>
         <div class="hero_links">
           <a class="hero_link primary" href="https://github.com/qzl1-stack" target="_blank" rel="noreferrer">
-            github.com/qzl1-stack
+            github.com/qzl1-stack ↗
           </a>
           <span class="hero_link ghost">湖南农业大学</span>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="resume_layout">
-      <aside class="left_column">
-        <article class="info_card">
-          <h2>教育背景</h2>
-          <h3>湖南农业大学</h3>
-          <p>本科</p>
-        </article>
-        <article class="info_card">
-          <h2>专业技能</h2>
-          <div class="skill_groups">
+    <!-- ── Body ── -->
+    <div class="resume_body">
+
+      <!-- Sidebar -->
+      <aside class="resume_sidebar">
+        <section class="side_card">
+          <h2 class="side_label">教育背景</h2>
+          <h3 class="side_school">湖南农业大学</h3>
+          <p class="side_meta">本科 · 软件工程</p>
+        </section>
+
+        <section class="side_card">
+          <h2 class="side_label">专业技能</h2>
+          <div class="skill_list">
             <div class="skill_group" v-for="group in skill_groups" :key="group.label">
-              <p class="skill_label">{{ group.label }}</p>
+              <p class="skill_group_label">{{ group.label }}</p>
               <div class="chips">
                 <span class="chip" v-for="item in group.items" :key="item">{{ item }}</span>
               </div>
             </div>
           </div>
-        </article>
-        <article class="info_card">
-          <h2>自我评价</h2>
+        </section>
+
+        <section class="side_card">
+          <h2 class="side_label">自我评价</h2>
           <ul class="about_list">
             <li v-for="item in about_list" :key="item">{{ item }}</li>
           </ul>
-        </article>
+        </section>
       </aside>
 
-      <div class="right_column">
-        <article class="project_card" v-for="project in projects" :key="project.key">
-          <div class="project_head">
-            <h3><span>{{ project.name }}</span> — {{ project.subtitle }}</h3>
-            <a :href="project.link" target="_blank" rel="noreferrer">↗ GitHub</a>
+      <!-- Projects -->
+      <div class="resume_projects">
+        <div class="projects_header">
+          <h2 class="projects_title">项目经历</h2>
+        </div>
+
+        <article class="proj_card" v-for="project in projects" :key="project.key">
+          <div class="proj_head">
+            <div>
+              <h3 class="proj_name">
+                <code>{{ project.name }}</code>
+                <span class="proj_sep">—</span>
+                {{ project.subtitle }}
+              </h3>
+            </div>
+            <a class="proj_link" :href="project.link" target="_blank" rel="noreferrer">
+              GitHub ↗
+            </a>
           </div>
-          <p class="project_desc">{{ project.description }}</p>
-          <div class="project_tags">
-            <span class="tag" v-for="tag in project.tags" :key="tag">{{ tag }}</span>
+          <p class="proj_desc">{{ project.description }}</p>
+          <div class="proj_tags">
+            <span class="proj_tag" v-for="tag in project.tags" :key="tag">{{ tag }}</span>
           </div>
-          <button class="demo_toggle" @click="ToggleProjectDemo(project.key)">
+          <button
+            class="demo_toggle"
+            :class="{ is_open: open_project_keys[project.key] }"
+            @click="ToggleProjectDemo(project.key)"
+          >
             <span>查看功能演示</span>
-            <span>{{ project.demos.length }} 个 GIF</span>
+            <span class="demo_count">{{ project.demos.length }} 个 GIF</span>
+            <svg class="toggle_icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 10.5 3 5.5h10z"/>
+            </svg>
           </button>
           <div class="demo_panel" v-show="open_project_keys[project.key]">
             <figure class="demo_item" v-for="demo in project.demos" :key="demo.src">
@@ -174,65 +195,73 @@ useHead({
           </div>
         </article>
       </div>
-    </section>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
 .resume_page {
-  width: min(1220px, 96vw);
-  margin: 0 auto 36px;
+  max-width: calc(var(--content_w) + 64px);
+  margin: 0 auto;
+  padding: 0 32px 80px;
 }
 
+/* ── Hero ── */
 .resume_hero {
   position: relative;
   overflow: hidden;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #101729 0%, #09111e 52%, #0d1624 100%);
-  margin: 24px 0 20px;
-  padding: 58px 28px;
-}
-
-.hero_overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 80% at 22% 48%, rgba(37, 99, 235, 0.28) 0%, transparent 72%),
-    radial-gradient(ellipse 48% 62% at 78% 28%, rgba(14, 165, 233, 0.22) 0%, transparent 72%);
-}
-
-.hero_content {
-  position: relative;
-  z-index: 1;
+  border-radius: var(--radius_lg);
+  background: var(--text_head);
+  margin: 28px 0 28px;
+  padding: 60px 40px;
   text-align: center;
 }
 
+.hero_glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 65% 85% at 20% 50%, color-mix(in srgb, var(--brand) 28%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 55% at 80% 20%, color-mix(in srgb, var(--brand_2) 18%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero_body { position: relative; z-index: 1; }
+
 .hero_badge {
   display: inline-block;
-  margin: 0 0 14px;
-  padding: 5px 12px;
+  margin: 0 0 18px;
+  padding: 5px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(111, 170, 255, 0.38);
-  background: rgba(37, 99, 235, 0.22);
-  color: #a7ccff;
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+  color: var(--brand_2);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: var(--font_sans);
 }
 
-.hero_content h1 {
-  margin: 0;
-  color: #ffffff;
-  font-size: clamp(42px, 8vw, 72px);
-  line-height: 1.08;
+.hero_name {
+  font-family: var(--font_serif);
+  color: #f2ede3;
+  font-size: clamp(48px, 9vw, 80px);
+  line-height: 1.05;
+  margin: 0 0 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.hero_content h1 span {
-  color: #5fb8ff;
+.hero_name em {
+  font-style: normal;
+  color: var(--brand_2);
 }
 
 .hero_sub {
-  margin: 12px 0 22px;
-  color: #94a8c6;
+  color: rgba(242, 237, 227, 0.55);
+  margin: 0 0 24px;
+  font-size: 14px;
 }
 
 .hero_links {
@@ -245,204 +274,295 @@ useHead({
 .hero_link {
   display: inline-flex;
   align-items: center;
-  padding: 9px 16px;
-  border-radius: 999px;
+  padding: 9px 18px;
+  border-radius: var(--radius);
   text-decoration: none;
   font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
 .hero_link.primary {
-  color: #ffffff;
-  background: #2563eb;
+  background: var(--brand);
+  color: #f2ede3;
 }
+
+.hero_link.primary:hover { background: var(--brand_2); }
 
 .hero_link.ghost {
-  color: #d2e3ff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.08);
+  color: rgba(242, 237, 227, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.resume_layout {
+/* ── Body grid ── */
+.resume_body {
   display: grid;
-  grid-template-columns: 0.95fr 1.45fr;
-  gap: 18px;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-.left_column,
-.right_column {
-  display: grid;
-  gap: 18px;
-  align-self: start;
-}
+/* ── Sidebar ── */
+.resume_sidebar { display: grid; gap: 16px; }
 
-.info_card,
-.project_card {
+.side_card {
   background: var(--panel);
-  border: 1px solid color-mix(in srgb, var(--border) 84%, transparent);
-  border-radius: 18px;
-  padding: 20px 20px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius_lg);
+  padding: 20px;
 }
 
-.info_card h2 {
+.side_label {
+  font-family: var(--font_sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand);
   margin: 0 0 14px;
-  font-size: 14px;
+}
+
+.side_school {
+  font-family: var(--font_serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text_head);
+  margin: 0 0 4px;
+}
+
+.side_meta {
+  font-size: 13px;
   color: var(--text_muted);
-  letter-spacing: 0.08em;
+  margin: 0;
 }
 
-.info_card h3 {
-  margin: 0 0 2px;
-}
-
-.skill_groups {
-  display: grid;
-  gap: 12px;
-}
+.skill_list { display: grid; gap: 14px; }
 
 .skill_group {
-  padding-top: 8px;
-  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
 }
 
-.skill_label {
-  margin: 0 0 8px;
-  font-size: 12px;
+.skill_group:first-child { padding-top: 0; border-top: none; }
+
+.skill_group_label {
+  font-size: 11px;
   color: var(--text_muted);
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
 
 .chip {
-  font-size: 12px;
-  padding: 4px 10px;
+  font-size: 11px;
+  padding: 3px 9px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
-  background: color-mix(in srgb, var(--panel_active) 74%, transparent);
+  border: 1px solid var(--border);
+  background: var(--panel_active);
+  color: var(--text_body);
 }
 
 .about_list {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 16px;
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .about_list li {
+  font-size: 13px;
   color: var(--text_body);
+  line-height: 1.7;
 }
 
-.project_head {
+/* ── Projects ── */
+.resume_projects { display: grid; gap: 16px; }
+
+.projects_header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.projects_title {
+  font-family: var(--font_serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text_head);
+  margin: 0;
+}
+
+.proj_card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius_lg);
+  padding: 22px 22px 18px;
+  transition: border-color 0.2s;
+}
+
+.proj_card:hover { border-color: var(--border_strong); }
+
+.proj_head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.project_head h3 {
+.proj_name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text_head);
   margin: 0;
-  font-size: 18px;
-  line-height: 1.35;
+  line-height: 1.45;
 }
 
-.project_head h3 span {
-  color: #2563eb;
-  font-family: 'Consolas', 'Cascadia Mono', monospace;
-  font-size: 0.93em;
+.proj_name code {
+  font-family: var(--font_mono);
+  font-size: 0.9em;
+  color: var(--brand);
+  background: var(--brand_light);
+  border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+  border-radius: 4px;
+  padding: 1px 6px;
 }
 
-.project_head a {
-  flex-shrink: 0;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 4px 10px;
-  font-size: 12px;
-  text-decoration: none;
+.proj_sep {
   color: var(--text_muted);
+  font-weight: 400;
+  padding: 0 4px;
 }
 
-.project_desc {
-  margin: 0 0 12px;
+.proj_link {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text_muted);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 4px 10px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.proj_link:hover {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 40%, transparent);
+}
+
+.proj_desc {
+  font-size: 13.5px;
   color: var(--text_body);
+  line-height: 1.75;
+  margin: 0 0 14px;
 }
 
-.project_tags {
+.proj_tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
+  margin-bottom: 14px;
 }
 
-.tag {
-  font-size: 12px;
+.proj_tag {
+  font-size: 11px;
   color: var(--text_muted);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 3px 9px;
+  border-radius: 6px;
+  padding: 2px 8px;
+  background: color-mix(in srgb, var(--panel_active) 60%, transparent);
 }
 
 .demo_toggle {
-  margin-top: 14px;
-  width: 100%;
-  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: color-mix(in srgb, var(--panel_active) 65%, transparent);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 14px;
+  background: color-mix(in srgb, var(--panel_active) 60%, transparent);
+  color: var(--text_muted);
+  font-size: 13px;
   cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  text-align: left;
 }
+
+.demo_toggle:hover {
+  color: var(--text_head);
+  border-color: var(--border_strong);
+}
+
+.demo_toggle.is_open {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 40%, transparent);
+  background: var(--brand_light);
+}
+
+.demo_count {
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.toggle_icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.demo_toggle.is_open .toggle_icon { transform: rotate(180deg); }
 
 .demo_panel {
   margin-top: 10px;
   border-radius: 12px;
-  border: 1px solid #2a3447;
+  border: 1px solid var(--border);
   overflow: hidden;
-  background: #0f1624;
+  background: var(--bg2);
 }
 
-.demo_item {
-  margin: 0;
-}
+.demo_item { margin: 0; }
 
-.demo_item + .demo_item {
-  border-top: 1px solid #2a3447;
-}
+.demo_item + .demo_item { border-top: 1px solid var(--border); }
 
 .demo_item figcaption {
-  padding: 8px 10px;
-  color: #8ba0bf;
+  padding: 8px 14px;
   font-size: 12px;
-  background: #161f31;
+  color: var(--text_muted);
+  background: var(--panel_active);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font_sans);
 }
 
 .demo_item img {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 430px;
+  max-height: 440px;
   object-fit: contain;
-  background: #0f1624;
+  background: var(--bg2);
 }
 
+/* ── Responsive ── */
 @media (max-width: 980px) {
-  .resume_layout {
-    grid-template-columns: 1fr;
-  }
+  .resume_body { grid-template-columns: 1fr; }
+  .resume_sidebar { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 }
 
 @media (max-width: 640px) {
+  .resume_page { padding: 0 16px 60px; }
+
   .resume_hero {
-    border-radius: 18px;
-    padding: 42px 16px;
+    border-radius: var(--radius);
+    padding: 44px 20px;
+    margin: 16px 0 20px;
   }
 
-  .project_head {
-    flex-direction: column;
-  }
+  .resume_sidebar { grid-template-columns: 1fr; }
+
+  .proj_head { flex-direction: column; gap: 8px; }
 }
 </style>

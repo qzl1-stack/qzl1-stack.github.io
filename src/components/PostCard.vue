@@ -9,72 +9,129 @@ defineProps<{
 
 <template>
   <article class="post_card">
-    <p class="post_meta">{{ post.date }}</p>
-    <h3 class="post_title">{{ post.title }}</h3>
-    <p class="post_summary">{{ post.summary }}</p>
-    <div class="post_tags">
-      <span class="post_tag" v-for="tag in post.tags" :key="tag">{{ tag }}</span>
+    <RouterLink class="card_link" :to="`${link_base}/${post.slug}`" tabindex="-1" aria-hidden="true"></RouterLink>
+    <div class="card_date">
+      <span>{{ post.date }}</span>
     </div>
-    <RouterLink class="post_link" :to="`${link_base}/${post.slug}`">
-      阅读全文
-    </RouterLink>
+    <div class="card_body">
+      <h3 class="card_title">{{ post.title }}</h3>
+      <p class="card_summary">{{ post.summary }}</p>
+      <div class="card_footer">
+        <div class="card_tags">
+          <span class="card_tag" v-for="tag in post.tags" :key="tag">{{ tag }}</span>
+        </div>
+        <RouterLink class="card_read" :to="`${link_base}/${post.slug}`">
+          阅读 →
+        </RouterLink>
+      </div>
+    </div>
   </article>
 </template>
 
 <style scoped>
 .post_card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 18px;
+  padding: 18px 0;
   border-bottom: 1px solid var(--border);
-  padding: 20px 0;
-  background: transparent;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.22s;
 }
 
-.post_card:hover {
-  border-color: var(--text_head);
+.post_card:hover { border-color: var(--border_strong); }
+
+/* invisible overlay for whole-card hover */
+.card_link {
+  position: absolute;
+  inset: 0;
 }
 
-.post_meta {
+.card_date {
+  padding-top: 3px;
+  flex-shrink: 0;
+}
+
+.card_date span {
+  font-size: 11px;
   color: var(--text_muted);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  margin: 0;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  word-break: break-all;
 }
 
-.post_title {
-  margin: 10px 0 10px;
-  font-size: 18px;
-  line-height: 1.45;
+.card_body { min-width: 0; }
+
+.card_title {
+  font-family: var(--font_serif);
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text_head);
+  margin: 0 0 7px;
+  line-height: 1.4;
+  transition: color 0.2s;
 }
 
-.post_summary {
-  margin: 0 0 14px;
-  color: var(--text_body);
-  font-size: 14px;
+.post_card:hover .card_title { color: var(--brand); }
+
+.card_summary {
+  font-size: 13px;
+  color: var(--text_muted);
+  line-height: 1.7;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.post_tags {
+.card_footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card_tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 5px;
+  min-width: 0;
 }
 
-.post_tag {
-  border-bottom: 1px solid var(--border);
-  padding: 2px 0;
-  font-size: 12px;
+.card_tag {
+  font-size: 11px;
   color: var(--text_muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 8px;
+  background: color-mix(in srgb, var(--panel_active) 50%, transparent);
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.post_link {
+.post_card:hover .card_tag {
   color: var(--brand);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent);
 }
 
-.post_link:hover {
-  text-decoration: underline;
+.card_read {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text_muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.card_read:hover,
+.post_card:hover .card_read { color: var(--brand); }
+
+@media (max-width: 480px) {
+  .post_card { grid-template-columns: 1fr; gap: 6px; }
+  .card_date { padding-top: 0; }
 }
 </style>

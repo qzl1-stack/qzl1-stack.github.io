@@ -1,6 +1,6 @@
 ---
-title: "创意实验：首页 3D Hero"
-slug: "learning-3d-interaction"
+title: "new start"
+slug: "new start"
 date: "2026-06-06"
 tags: ["new start"]
 summary: "fresh man's first month"

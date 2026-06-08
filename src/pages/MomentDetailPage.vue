@@ -28,3 +28,9 @@ useHead(() => ({
     <RouterLink to="/moments" class="back_link">返回动态列表</RouterLink>
   </section>
 </template>
+
+<style scoped>
+.panel {
+  max-width: 760px;
+}
+</style>

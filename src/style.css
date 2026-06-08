@@ -295,6 +295,12 @@ a { color: inherit; text-underline-offset: 3px; }
   position: relative;
 }
 
+.panel.article {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
 /* ── Grid utility ──────────────────────── */
 .grid {
   display: grid;
@@ -312,6 +318,8 @@ a { color: inherit; text-underline-offset: 3px; }
 
   .page_container { padding: 0 20px; }
 
+  .panel.article { padding: 32px 20px 60px; }
+
   .note_detail_layout {
     grid-template-columns: 1fr;
   }
@@ -321,6 +329,7 @@ a { color: inherit; text-underline-offset: 3px; }
 
 @media (max-width: 640px) {
   .page_container { padding: 0 16px; }
+  .panel.article { padding: 24px 16px 48px; }
 }
 
 /* ═══════════════════════════════════════

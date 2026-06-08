@@ -32,7 +32,7 @@ useHead({ title: '动态 | QZL Blog' })
 
 <style scoped>
 .list_page {
-  max-width: calc(var(--content_w) + 64px);
+  max-width: 760px;
   margin: 0 auto;
   padding: 0 32px 80px;
 }
@@ -40,7 +40,6 @@ useHead({ title: '动态 | QZL Blog' })
 .list_header {
   padding: 56px 0 40px;
   border-bottom: 1px solid var(--border);
-  max-width: 640px;
 }
 
 .list_eyebrow {

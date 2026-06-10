@@ -124,8 +124,10 @@ a { color: inherit; text-underline-offset: 3px; }
 
 /* ── Progress bar (article reading) ─────── */
 .read_progress_bar {
-  position: sticky;
+  position: fixed;
   top: var(--header_h);
+  left: 0;
+  width: 100%;
   z-index: 13;
   height: 2px;
   background: var(--border);
@@ -142,15 +144,19 @@ a { color: inherit; text-underline-offset: 3px; }
 /* ── Article / Note detail ──────────────── */
 .note_detail_layout {
   display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 40px;
+  grid-template-columns: 220px 760px;
+  gap: 48px;
   align-items: start;
+  max-width: 1060px;
+  margin: 0 auto;
 }
 
 .toc_panel {
   position: sticky;
   top: calc(var(--header_h) + 24px);
   align-self: start;
+  max-height: calc(100vh - var(--header_h) - 48px);
+  overflow-y: auto;
   padding: 0;
 }
 
@@ -296,8 +302,6 @@ a { color: inherit; text-underline-offset: 3px; }
 }
 
 .panel.article {
-  max-width: 1000px;
-  margin: 0 auto;
   padding: 48px 32px 80px;
 }
 
@@ -322,9 +326,14 @@ a { color: inherit; text-underline-offset: 3px; }
 
   .note_detail_layout {
     grid-template-columns: 1fr;
+    max-width: 760px;
   }
 
-  .toc_panel { position: static; }
+  .toc_panel {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 @media (max-width: 640px) {

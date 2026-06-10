@@ -251,18 +251,20 @@ a { color: inherit; text-underline-offset: 3px; }
 }
 
 .markdown_body pre {
-  background: var(--text_head);
+  background: #1a1714;
   border-radius: var(--radius);
   padding: 20px;
   overflow-x: auto;
+  border: 1px solid #2e2a25;
 }
 
 .markdown_body pre code {
   background: none;
   border: none;
   padding: 0;
-  color: #f2ede3;
+  color: #e2dbd0;
   font-size: 0.85em;
+  line-height: 1.7;
 }
 
 .markdown_body blockquote {

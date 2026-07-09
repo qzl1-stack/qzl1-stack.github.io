@@ -31,6 +31,8 @@ useHead(() => ({
 
 <style scoped>
 .panel {
+  width: 100%;
   max-width: 760px;
+  margin: 0 auto;
 }
 </style>
